@@ -1,5 +1,5 @@
 # GooglePlayRatingsReporter
-A short python script that scrapes Google Play Store pages for app rating counts and reports changes to HipChat/Slack.
+A short python script that scrapes Google Play Store pages for app rating counts and reports changes to HipChat/Slack/PushBullet.
 
 # Setup
 Create a new file called "tokens.py" in the root directory of the repository. Add lines of the form
@@ -7,6 +7,7 @@ Create a new file called "tokens.py" in the root directory of the repository. Ad
 ```python
 HIPCHAT_TOKEN="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 SLACK_TOKEN="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+PUSHBULLET_TOKEN="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 ```
 
 where "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" is a valid token for the corresponding API. (You can safely omit either of these lines if you intend to use a single messaging service.)
@@ -17,14 +18,16 @@ Create a new file called "configuration.json" in the root directory of the repos
 {
     "services": [
         "hipchat",
-        "slack"
+        "slack",
+        "pushbullet"
     ],
     "apps": [
         {
             "name": "App 1 Name ",
             "scrape_url": "https://play.google.com/store/apps/details?id=com.example.app1&hl=en",
             "channels": {
-                "hipchat": "hipchat-channel-name-for-app-1"
+                "hipchat": "hipchat-channel-name-for-app-1",
+                "pushbullet":"<contact's email>"
             }
         },
         {
@@ -40,6 +43,11 @@ Create a new file called "configuration.json" in the root directory of the repos
 ```
 
 Note that configuration Slack channel names must not include a leading #.
+
+# Credits
+- [stkent/GooglePlayRatingsReporter](https://github.com/stkent/GooglePlayRatingsReporter)
+- [randomchars/pushbullet.py](https://github.com/randomchars/pushbullet.py)
+
 
 # License
 
