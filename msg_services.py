@@ -2,7 +2,8 @@ from abc import ABCMeta
 from abc import abstractmethod
 from enum import Enum
 from requests import post
-from tokens import HIPCHAT_TOKEN, SLACK_TOKEN
+from tokens import HIPCHAT_TOKEN, SLACK_TOKEN, PUSHBULLET_TOKEN
+from pushbullet import Pushbullet
 
 
 class MessageType(Enum):
@@ -16,6 +17,20 @@ class BaseMessagingService(object):
     @abstractmethod
     def post_message(self, room_name, base_message, message_type=None):
         pass
+
+class PushBullet(BaseMessagingService):
+
+    def post_message(self, room_name, base_message, message_type=None):
+        full_message = base_message
+        PushBullet._post_message(room_name, full_message)
+
+    @staticmethod
+    def _post_message(contact_name, full_message):
+        pb = Pushbullet(PUSHBULLET_TOKEN)
+        for i, val in enumerate(pb.chats):
+            if contact_name == val.email:
+                val.push_note("Got Rating!", full_message)
+        push = pb.push_note("Got Rating!", full_message)
 
 
 class HipChat(BaseMessagingService):

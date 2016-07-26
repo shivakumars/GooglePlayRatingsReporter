@@ -4,8 +4,9 @@ import requests
 from bs4 import BeautifulSoup
 import diskops
 from msg_services import MessageType
-from msg_services import HipChat, Slack
+from msg_services import HipChat, Slack, PushBullet
 import msg_providers
+from operator import itemgetter
 
 global latest_saved_version, latest_saved_ratings, latest_saved_average
 
@@ -68,7 +69,8 @@ if __name__ == "__main__":
 
     service_lookup_dict = {
         "hipchat": HipChat(),
-        "slack": Slack()
+        "slack": Slack(),
+        "pushbullet": PushBullet()
     }
 
     for app in config["apps"]:
@@ -82,8 +84,9 @@ if __name__ == "__main__":
 
         # extract rating counts and app version number:
         soup = BeautifulSoup(r.text, "html.parser")
-        new_version = soup.find("div", {"itemprop": "softwareVersion"}).next.strip()
+        new_version = soup.find("div", {"itemprop": "softwareVersion"}).contents
         new_ratings = [int(rating.string.replace(",", "")) for rating in soup.find_all("span", "bar-number")]
+        new_version = (itemgetter(0)(new_version) )
 
         # load stored app data
         latest_saved_data = diskops.read_data_from_file(PROJECT_NAME)
